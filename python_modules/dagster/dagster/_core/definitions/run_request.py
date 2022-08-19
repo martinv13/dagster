@@ -46,6 +46,7 @@ class RunRequest(
             ("run_config", PublicAttr[Mapping[str, Any]]),
             ("tags", PublicAttr[Mapping[str, str]]),
             ("job_name", PublicAttr[Optional[str]]),
+            ("op_subset", ...)
         ],
     )
 ):
