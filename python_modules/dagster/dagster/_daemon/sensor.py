@@ -759,6 +759,9 @@ def _create_sensor_run(
     )
     if run_request.run_key:
         tags[RUN_KEY_TAG] = run_request.run_key
+    
+    solid_selection = target_data.solid_selection
+    ...
 
     log_action(
         instance,
