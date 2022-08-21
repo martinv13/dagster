@@ -779,7 +779,7 @@ def _create_sensor_run(
         solids_to_execute=external_pipeline.solids_to_execute,
         step_keys_to_execute=None,
         status=PipelineRunStatus.NOT_STARTED,
-        solid_selection=target_data.solid_selection,
+        solid_selection=run_request.op_selection or target_data.solid_selection,
         root_run_id=None,
         parent_run_id=None,
         tags=tags,

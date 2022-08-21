@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Mapping, NamedTuple, Optional
+from typing import Any, Mapping, NamedTuple, Optional, Sequence
 
 import dagster._check as check
 from dagster._annotations import PublicAttr
@@ -45,6 +45,7 @@ class RunRequest(
             ("run_key", PublicAttr[Optional[str]]),
             ("run_config", PublicAttr[Mapping[str, Any]]),
             ("tags", PublicAttr[Mapping[str, str]]),
+            ("op_selection", PublicAttr[Optional[Sequence[str]]]),
             ("job_name", PublicAttr[Optional[str]]),
         ],
     )
@@ -62,6 +63,14 @@ class RunRequest(
             be launched, as a dict.
         tags (Optional[Dict[str, str]]): A dictionary of tags (string key-value pairs) to attach
             to the launched run.
+        op_selection (Optional[Sequence[str]]): A list of op selection queries (including single op
+                names) to execute. For example:
+                * ``['some_op']``: selects ``some_op`` itself.
+                * ``['*some_op']``: select ``some_op`` and all its ancestors (upstream dependencies).
+                * ``['*some_op+++']``: select ``some_op``, all its ancestors, and its descendants
+                (downstream dependencies) within 3 levels down.
+                * ``['*some_op', 'other_op_a', 'other_op_b+']``: select ``some_op`` and all its
+                ancestors, ``other_op_a`` itself, and ``other_op_b`` and its direct child ops.
         job_name (Optional[str]): (Experimental) The name of the job this run request will launch.
             Required for sensors that target multiple jobs.
     """
@@ -71,6 +80,7 @@ class RunRequest(
         run_key: Optional[str],
         run_config: Optional[Mapping[str, Any]] = None,
         tags: Optional[Mapping[str, str]] = None,
+        op_selection: Optional[Sequence[str]] = None,
         job_name: Optional[str] = None,
     ):
         return super(RunRequest, cls).__new__(
@@ -78,6 +88,7 @@ class RunRequest(
             run_key=check.opt_str_param(run_key, "run_key"),
             run_config=check.opt_dict_param(run_config, "run_config", key_type=str),
             tags=check.opt_dict_param(tags, "tags", key_type=str, value_type=str),
+            op_selection=check.opt_sequence_param(op_selection, "op_selection", str),
             job_name=check.opt_str_param(job_name, "job_name"),
         )
 

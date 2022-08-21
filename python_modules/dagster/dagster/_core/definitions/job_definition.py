@@ -560,6 +560,7 @@ class JobDefinition(PipelineDefinition):
         partition_key: str,
         run_key: Optional[str],
         tags: Optional[Mapping[str, str]] = None,
+        op_selection: Optional[Sequence[str]] = None,
     ) -> RunRequest:
         partition_set = self.get_partition_set_def()
         if not partition_set:
@@ -574,7 +575,11 @@ class JobDefinition(PipelineDefinition):
         )
 
         return RunRequest(
-            run_key=run_key, run_config=run_config, tags=run_request_tags, job_name=self.name
+            run_key=run_key,
+            run_config=run_config,
+            tags=run_request_tags,
+            op_selection=op_selection,
+            job_name=self.name,
         )
 
     @public
